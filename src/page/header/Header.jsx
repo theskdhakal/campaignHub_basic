@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import logo from "../../component/assets/logo.png";
 import { AiOutlineSearch } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -8,8 +9,8 @@ export const Header = () => {
   const profileRef = useRef();
 
   const navigation = [
-    { title: "Login", path: "#" },
-    { title: "Register", path: "#" },
+    { title: "Login", path: "/login" },
+    { title: "Register", path: "/register" },
   ];
 
   const profileNavigation = [
@@ -23,9 +24,9 @@ export const Header = () => {
       <div className="max-w-screen-xl mx-auto">
         <div className="header-grid grid grid-cols-[1fr,2fr,1fr] items-center py-3 px-4 md:px-8">
           <div className="logo-container flex-none lg:flex-initial">
-            <a href="#">
+            <Link to="/">
               <img src={logo} width={120} height={50} alt="Float UI logo" />
-            </a>
+            </Link>
           </div>
 
           <div className="search-bar-container bordered round ml-2 lg:flex relative ">
