@@ -6,11 +6,13 @@ import { MainLayout } from "../../component/layout/MainLayout";
 import { toast } from "react-toastify";
 import { setUser } from "./UserSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const [form, setForm] = useState();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -19,7 +21,13 @@ export const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    dispatch(setUser(form));
+
+    const userDetail = {
+      email: form.email,
+      lName: form.lName,
+      fName: form.fName,
+    };
+    dispatch(setUser(userDetail)) && navigate("/");
     toast.success("user has been registered");
   };
 
