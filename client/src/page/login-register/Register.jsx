@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { setUser } from "./UserSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { registerUserAction } from "./userAction";
 
 export const Register = () => {
   const [form, setForm] = useState();
@@ -22,13 +23,7 @@ export const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    const userDetail = {
-      email: form.email,
-      lName: form.lName,
-      fName: form.fName,
-    };
-    dispatch(setUser(userDetail)) && navigate("/");
-    toast.success("user has been registered");
+    dispatch(registerUserAction(form));
   };
 
   return (

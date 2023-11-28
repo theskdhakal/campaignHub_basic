@@ -14,11 +14,26 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+//APIs
+import userRouter from "./src/routers/userRouter.js";
+
+app.use("/api/v1/user", userRouter);
+
 //server side rendering
 
 app.use("/", (req, res, next) => {
   try {
     res.send("<h1> Coming Soon.....</h1>");
+  } catch (error) {
+    next;
+  }
+});
+
+// server-side rendering
+
+app.use("/", (req, res, next) => {
+  try {
+    res.send("<h1>Coming soon...</h1>");
   } catch (error) {
     next;
   }
