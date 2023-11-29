@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { InputFields } from "../../component/input-fields/InputFields";
 import { CustomInput } from "../../component/custom-input/CustomInput";
 import { MainLayout } from "../../component/layout/MainLayout";
-
 import { toast } from "react-toastify";
-import { setUser } from "./UserSlice";
-import { useDispatch } from "react-redux";
+import { postNewUser } from "../../helper/axiosHelper";
 import { useNavigate } from "react-router-dom";
-import { registerUserAction } from "./userAction";
+import { useDispatch } from "react-redux";
+import { setUser } from "./UserSlice";
 
 export const Register = () => {
   const [form, setForm] = useState();
-
+  const navigate = useNavigate("/");
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
+  const [resp, setResp] = useState({});
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -22,8 +22,25 @@ export const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    const { confirmPassword, ...rest } = form;
 
-    dispatch(registerUserAction(form));
+    console.log(form);
+
+    if (rest.password === confirmPassword) {
+      const result = await postNewUser(rest);
+      console.log(result);
+      const { status, message, user } = result;
+
+      setResp({ status, message });
+
+      toast[status](message);
+      if (status === "success") {
+        dispatch(setUser(user));
+        navigate("/");
+      }
+    } else {
+      return alert("Password do not match");
+    }
   };
 
   return (
@@ -37,6 +54,15 @@ export const Register = () => {
             </span>
           </h1>
           <form className="mt-6" onSubmit={handleRegister}>
+            {resp?.message && (
+              <div
+                style={{
+                  background: resp.status === "success" ? "green" : "red",
+                }}
+              >
+                {resp.message}
+              </div>
+            )}
             {InputFields.map((item, i) => (
               <CustomInput
                 key={i}

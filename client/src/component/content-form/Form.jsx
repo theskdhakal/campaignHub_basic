@@ -22,27 +22,29 @@ const Form = () => {
     toast.success("Your Post has been Submitted");
   };
   return (
-    <form className="flex justify-center my-4" onSubmit={handleOnSubmit}>
-      <div className="w-1/2">
-        {" "}
-        <textarea
-          rows="10"
-          name="post"
-          value={form.post || ""}
-          placeholder="What's on your mind!!"
-          onChange={handleOnChange}
-          className="w-full pl-12 pr-3 py-5 text-justify text-gray-500 bg-transparent outline-none border focus:border-black-600 shadow-sm rounded-lg text-center"
-        />
-      </div>
-      <div className="flex flex-col justify-end ml-2">
-        <button
-          className="bg-blue-500 border px-4 py-2 rounded text-white"
-          type="submit"
-        >
-          Post
-        </button>
-      </div>
-    </form>
+    <div>
+      <form className="flex justify-center my-5 py-5" onSubmit={handleOnSubmit}>
+        <div className="w-1/2">
+          {" "}
+          <textarea
+            rows="10"
+            name="post"
+            value={form.post || ""}
+            placeholder="What's on your mind!!"
+            onChange={handleOnChange}
+            className="w-full pl-12 pr-3 py-5 text-justify text-gray-500 bg-transparent outline-none border focus:border-black-600 shadow-sm rounded-lg text-center"
+          />
+        </div>
+        <div className="flex flex-col justify-end ml-2">
+          <button
+            className="bg-blue-500 border px-4 py-2 rounded text-white"
+            type="submit"
+          >
+            Post
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

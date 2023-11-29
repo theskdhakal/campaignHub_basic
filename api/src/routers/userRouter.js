@@ -13,12 +13,17 @@ router.post("/", async (req, res, next) => {
           message:
             "Your account has been created successfully, please go to login page and login with your email:" +
             result.email,
+          user: result,
         })
       : res.json({
           status: "error",
           message: "Unable to register, please try again",
         });
   } catch (error) {
+    if (error.message.includes("E11000 duplicate key error collection")) {
+      error.status = 200;
+      error.message = "There is another user already exist with this email";
+    }
     next(error);
   }
 });
