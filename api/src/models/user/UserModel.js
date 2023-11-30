@@ -1,6 +1,10 @@
-import { UserModel } from "./UserSchema.js";
+import UserSchema from "./UserSchema.js";
 
 export const insertUser = (obj) => {
-  const newUser = new UserModel(obj);
-  return newUser.save();
+  return UserSchema(obj).save();
+};
+
+//to get object from db
+export const getOneUser = (filter) => {
+  return UserSchema.findOne(filter);
 };

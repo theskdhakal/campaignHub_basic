@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CustomInput } from "../../component/custom-input/CustomInput";
 import { LoginInput } from "../../component/input-fields/InputFields";
 import { MainLayout } from "../../component/layout/MainLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUserAction } from "./userAction";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [form, setForm] = useState();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    user._id && navigate("/");
+  }, [user._id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -13,7 +24,8 @@ export const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Logged In");
+
+    dispatch(loginUserAction(form));
   };
   return (
     <MainLayout>

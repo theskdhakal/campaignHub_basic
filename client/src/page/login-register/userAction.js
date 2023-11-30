@@ -1,4 +1,13 @@
 import { toast } from "react-toastify";
-import { postNewUser } from "../../helper/axiosHelper";
+import { loginUser } from "../../helper/axiosHelper";
 import { setUser } from "./UserSlice";
-import { useNavigate } from "react-router-dom";
+
+export const loginUserAction = (form) => async (dispatch) => {
+  const { status, message, user } = await loginUser(form);
+
+  toast[status](message);
+
+  if (status === "success") {
+    dispatch(setUser(user));
+  }
+};

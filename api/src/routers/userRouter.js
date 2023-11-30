@@ -1,5 +1,5 @@
 import express from "express";
-import { insertUser } from "../models/user/UserModel.js";
+import { getOneUser, insertUser } from "../models/user/UserModel.js";
 
 const router = express.Router();
 
@@ -24,6 +24,30 @@ router.post("/", async (req, res, next) => {
       error.status = 200;
       error.message = "There is another user already exist with this email";
     }
+    next(error);
+  }
+});
+
+router.post("/login", async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await getOneUser({ email });
+
+    if (user?.password === password) {
+      user.password = undefined;
+
+      return res.json({
+        status: "success",
+        message: "Logged in Successfully",
+        user,
+      });
+    }
+    res.json({
+      status: "error",
+      message: "Invalid login credentials",
+    });
+  } catch (error) {
     next(error);
   }
 });
