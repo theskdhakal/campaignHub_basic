@@ -8,6 +8,20 @@ Content-Type:application/json
   "lName":"Dhakal",
   "email":"a@a.com",
   "password":"1234456"
-
-
 }
+
+###
+POST  http://localhost:8000/api/v1/content
+Content-Type:application/json
+
+{
+  "userId": "65669c9f5a0c0542eb825bff",
+  "description": "Dhaaasdgaskal",
+  "image": "a@a.com"
+}
+
+
+
+
+###
+GET http://localhost:8000/api/v1/content

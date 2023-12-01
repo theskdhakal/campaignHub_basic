@@ -1,49 +1,76 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../../page/home/PostSlice";
+import { addContentAction } from "../../page/home/contentAction";
 
 const Form = () => {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ post: "", imageUrl: "" });
   const dispatch = useDispatch();
+
+  const { user } = useSelector((state) => state.user);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({
+      ...form,
+      [name]: value,
+    });
   };
 
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(addPost(form));
+    // Save post data to MongoDB with the provided image URL
+    const postData = {
+      description: form.post,
+      image: form.imageUrl,
+      userId: user._id,
+    };
 
-    setForm({});
+    if (!form.post || !form.imageUrl) {
+      toast.error("please fill out all fields");
+      return;
+    }
 
-    toast.success("Your Post has been Submitted");
+    // Dispatch action to add post with data including image URL
+    dispatch(addContentAction(postData));
+
+    setForm({ post: "", imageUrl: "" });
   };
+
   return (
-    <div>
-      <form className="flex justify-center my-5 py-5" onSubmit={handleOnSubmit}>
-        <div className="w-1/2">
-          {" "}
+    <div className="max-w-5xl mx-auto mb-4  mt-8 flex">
+      <div className="bg-white p-6 rounded-lg shadow-md flex-1">
+        <div className="flex flex-col items-center">
           <textarea
-            rows="10"
+            rows="6"
             name="post"
-            value={form.post || ""}
+            value={form.post}
             placeholder="What's on your mind!!"
             onChange={handleOnChange}
-            className="w-full pl-12 pr-3 py-5 text-justify text-gray-500 bg-transparent outline-none border focus:border-black-600 shadow-sm rounded-lg text-center"
+            className="w-full p-2 mb-4 text-gray-700 border rounded"
+          />
+
+          <input
+            type="url"
+            name="imageUrl"
+            value={form.imageUrl}
+            onChange={handleOnChange}
+            placeholder="Paste Image URL"
+            className="w-full mb-4 p-2 text-gray-700 border rounded"
           />
         </div>
-        <div className="flex flex-col justify-end ml-2">
-          <button
-            className="bg-blue-500 border px-4 py-2 rounded text-white"
-            type="submit"
-          >
-            Post
-          </button>
-        </div>
-      </form>
+      </div>
+
+      <div className="ml-4  mt-auto ">
+        <button
+          className="bg-blue-500 text-white  px-4 py-2 rounded hover:bg-blue-600"
+          onClick={handleOnSubmit}
+        >
+          Post
+        </button>
+      </div>
     </div>
   );
 };

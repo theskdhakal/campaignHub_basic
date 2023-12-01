@@ -1,4 +1,5 @@
 import express from "express";
+
 import "dotenv/config";
 import cors from "cors";
 
@@ -13,11 +14,15 @@ connectDB();
 // middlewares
 app.use(cors());
 app.use(express.json());
+app.use(morgan("dev"));
 
 //APIs
 import userRouter from "./src/routers/userRouter.js";
+import contentRouter from "./src/routers/contentRouter.js";
+import morgan from "morgan";
 
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/content", contentRouter);
 
 //server side rendering
 
