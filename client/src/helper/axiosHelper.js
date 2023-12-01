@@ -57,3 +57,16 @@ export const postContent = async ({ userId, ...obj }) => {
     };
   }
 };
+
+export const getAllContent = async () => {
+  try {
+    const response = await axios.get(contentEP);
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};

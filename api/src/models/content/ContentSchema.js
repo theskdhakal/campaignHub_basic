@@ -7,7 +7,10 @@ const contentSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
+    userName: {
+      type: String,
+      required: true,
+    },
     description: { type: String, required: true },
     image: { type: String, required: true },
   },

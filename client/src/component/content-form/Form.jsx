@@ -26,6 +26,7 @@ const Form = () => {
       description: form.post,
       image: form.imageUrl,
       userId: user._id,
+      userName: user.fName[0],
     };
 
     if (!form.post || !form.imageUrl) {
