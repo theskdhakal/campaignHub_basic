@@ -38,6 +38,7 @@ export const loginUser = async (obj) => {
 // ================================= content Api ========================
 
 export const postContent = async ({ userId, ...obj }) => {
+  console.log(obj);
   try {
     const response = await axios.post(
       contentEP,
@@ -45,6 +46,7 @@ export const postContent = async ({ userId, ...obj }) => {
       {
         headers: {
           authorization: userId,
+          "Content-Type": "multipart/form-data",
         },
       }
     );
@@ -61,6 +63,23 @@ export const postContent = async ({ userId, ...obj }) => {
 export const getAllContent = async () => {
   try {
     const response = await axios.get(contentEP);
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+export const getUserSpecificContent = async (userId) => {
+  try {
+    const response = await axios.get(contentEP + "/" + userId, {
+      headers: {
+        authorization: userId,
+      },
+    });
 
     return response.data;
   } catch (error) {

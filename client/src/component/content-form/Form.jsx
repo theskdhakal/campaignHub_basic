@@ -1,43 +1,52 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost } from "../../page/home/PostSlice";
 import { addContentAction } from "../../page/home/contentAction";
 
 const Form = () => {
-  const [form, setForm] = useState({ post: "", imageUrl: "" });
+  const [form, setForm] = useState({ post: "", imageFile: null });
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.user);
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    const { name, value, type } = e.target;
+
+    // If the input is a file input, update imageFile
+    if (type === "file") {
+      setForm({
+        ...form,
+        [name]: e.target.files[0],
+      });
+    } else {
+      setForm({
+        ...form,
+        [name]: value,
+      });
+    }
   };
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
 
-    // Save post data to MongoDB with the provided image URL
+    // Save post data to MongoDB with the provided image file
     const postData = {
       description: form.post,
-      image: form.imageUrl,
+      image: form.imageFile,
       userId: user._id,
-      userName: user.fName[0],
+      userName: user.fName + " " + user.lName,
     };
 
-    if (!form.post || !form.imageUrl) {
-      toast.error("please fill out all fields");
+    if (!form.post || !form.imageFile) {
+      toast.error("Please fill out all fields");
       return;
     }
 
-    // Dispatch action to add post with data including image URL
+    console.log(postData);
+    // Dispatch action to add post with data including image file
     dispatch(addContentAction(postData));
 
-    setForm({ post: "", imageUrl: "" });
+    setForm({ post: "", imageFile: null });
   };
 
   return (
@@ -54,11 +63,10 @@ const Form = () => {
           />
 
           <input
-            type="url"
-            name="imageUrl"
-            value={form.imageUrl}
+            type="file"
+            accept="image/*,video/*"
+            name="imageFile"
             onChange={handleOnChange}
-            placeholder="Paste Image URL"
             className="w-full mb-4 p-2 text-gray-700 border rounded"
           />
         </div>

@@ -1,21 +1,29 @@
 import express from "express";
+import { upload } from "../middleware/multerMiddleware.js";
 import {
   addContent,
   getAllContent,
   getContent,
 } from "../models/content/ContentModel.js";
 
+import uploadFile from "../utils/s3Bucket.js";
+
 const router = express.Router();
 
-router.post("/", async (req, res, next) => {
+router.post("/", upload.single("image"), async (req, res, next) => {
+  console.log(req.body);
   try {
-    console.log(req.body);
+    if (req.file) {
+      const { Location } = await uploadFile(req.file);
+      req.body.image = Location;
+    }
+
     const result = await addContent(req.body);
 
     result?._id
       ? res.json({
           status: "success",
-          message: "successfullt added content",
+          message: "successfully added content",
         })
       : res.json({
           status: "error",
@@ -32,7 +40,7 @@ router.get("/", async (req, res, next) => {
 
     res.json({
       status: "success",
-      messgae: "All contents are shown below:",
+      message: "All contents are shown below:", // Fixed typo in the message
       allContents,
     });
   } catch (error) {
@@ -52,7 +60,7 @@ router.get("/:userId", async (req, res, next) => {
 
     res.json({
       status: "success",
-      messgae: "User specific contents are shown below:",
+      message: "User-specific contents are shown below:", // Fixed typo in the message
       contents,
     });
   } catch (error) {

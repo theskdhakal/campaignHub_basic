@@ -10,6 +10,9 @@ import { toast } from "react-toastify";
 
 export const Header = () => {
   const { user } = useSelector((state) => state.user);
+
+  const userId = user?._id;
+
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -94,12 +97,12 @@ export const Header = () => {
                       </div>
                       <hr />
                       <div className="py-1">
-                        <a
-                          href="#"
+                        <Link
+                          to={`/Dashboard/${userId}`}
                           className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                         >
-                          Profile
-                        </a>
+                          Dashboard
+                        </Link>
                         <a
                           href="#"
                           className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
