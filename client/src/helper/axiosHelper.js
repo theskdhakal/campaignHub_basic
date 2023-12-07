@@ -5,6 +5,7 @@ const rootUrl = "http://localhost:8000";
 
 const userEP = rootUrl + "/api/v1/user";
 const contentEP = rootUrl + "/api/v1/content";
+const reactionEP = contentEP + "/reaction";
 
 // user api
 
@@ -86,6 +87,31 @@ export const getUserSpecificContent = async (userId) => {
     return {
       status: "error",
       message: error.message,
+    };
+  }
+};
+
+export const postReaction = async ({ contentId, userId }) => {
+  try {
+    const response = await axios.patch(
+      contentEP + "/" + contentId,
+      {
+        contentId,
+
+        reaction: 1,
+      },
+      {
+        headers: {
+          authorization: userId,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      messgae: error.message,
     };
   }
 };

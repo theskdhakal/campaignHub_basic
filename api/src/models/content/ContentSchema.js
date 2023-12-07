@@ -13,6 +13,18 @@ const contentSchema = new mongoose.Schema(
     },
     description: { type: String, required: true },
     image: { type: String },
+    reactions: [
+      {
+        userId: {
+          type: mongoose.Types.ObjectId,
+          ref: "User",
+        },
+        reaction: {
+          type: Number,
+          default: 0,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

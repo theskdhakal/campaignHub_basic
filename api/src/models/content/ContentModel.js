@@ -14,3 +14,8 @@ export const getContent = (filter) => {
 export const getAllContent = () => {
   return ContentSchema.find({});
 };
+
+//find contnet  by filter and  update
+export const updateContent = (filter) => {
+  return ContentSchema.findOneAndUpdate(filter, update, { new: true });
+};

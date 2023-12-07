@@ -1,8 +1,52 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getReactionsForContent, postReaction } from "../../helper/axiosHelper";
 
 const Feed = () => {
   const { posts } = useSelector((state) => state.post);
+  const { user } = useSelector((state) => state.user);
+
+  //keeping track for each post
+  const [reactions, setReactions] = useState({});
+
+  // useEffect(() => {
+  //   // Fetch initial reaction count for each post
+  //   const fetchReactions = async () => {
+  //     const reactionsData = {};
+  //     for (const post of posts) {
+  //       const response = await getReactionsForContent(post._id);
+  //       reactionsData[post._id] = response.reactions.length;
+  //     }
+  //     setReactions(reactionsData);
+  //   };
+
+  //   fetchReactions();
+  // }, [posts]);
+
+  const handleOnReaction = async (contentId) => {
+    try {
+      // Call the postReaction function to add a reaction
+      const response = await postReaction({
+        contentId,
+        userId: user._id,
+      });
+
+      // Log the response for debugging (you can remove this in production)
+      console.log(response);
+
+      // // Assuming the server responds with the updated reaction count
+      // const updatedReactionCount = response.reaction.reactions;
+
+      // // Update the local state or Redux state with the updated count
+      // setReactions((prevReactions) => ({
+      //   ...prevReactions,
+      //   [contentId]: updatedReactionCount,
+      // }));
+    } catch (error) {
+      console.error("Error adding reaction:", error);
+      // Handle the error as needed
+    }
+  };
 
   return (
     <section className="mt-12 max-w-screen-lg mx-auto overflow-x-hidden">
@@ -40,7 +84,13 @@ const Feed = () => {
                   {/* Add your reaction and comment components here */}
                   {/* For example, emoji reactions and a comment input */}
                   <div className="flex items-center mb-2">
-                    <span className="mr-2">❤️</span>
+                    <span className="mr-2"> {0}</span>
+                    <button
+                      onClick={() => handleOnReaction(item._id)}
+                      className="cursor-pointer"
+                    >
+                      ❤️
+                    </button>
                   </div>
 
                   <textarea
