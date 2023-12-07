@@ -23,10 +23,10 @@ export const addContentAction = (postData) => async (dispatch) => {
 };
 
 export const fetchContentAction = () => async (dispatch) => {
-  const { status, message, allContents } = await getAllContent();
+  const { status, message, contentWithTotalReactions } = await getAllContent();
 
   if (status === "success") {
-    dispatch(setPost(allContents));
+    dispatch(setPost(contentWithTotalReactions));
   }
 };
 

@@ -1,47 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getReactionsForContent, postReaction } from "../../helper/axiosHelper";
+import {
+  getAllContent,
+  getReactionsForContent,
+  postReaction,
+} from "../../helper/axiosHelper";
+import { fetchContentAction } from "../../page/home/contentAction";
 
 const Feed = () => {
   const { posts } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.user);
 
+  const dispatch = useDispatch();
+
   //keeping track for each post
   const [reactions, setReactions] = useState({});
 
-  // useEffect(() => {
-  //   // Fetch initial reaction count for each post
-  //   const fetchReactions = async () => {
-  //     const reactionsData = {};
-  //     for (const post of posts) {
-  //       const response = await getReactionsForContent(post._id);
-  //       reactionsData[post._id] = response.reactions.length;
-  //     }
-  //     setReactions(reactionsData);
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { contentWithTotalReactions } = await getAllContent();
 
-  //   fetchReactions();
-  // }, [posts]);
+        // Initialize the reactions state based on the fetched data
+        const initialReactions = {};
+        contentWithTotalReactions.forEach((content) => {
+          initialReactions[content._id] = {
+            totalReactions: content.totalReactions,
+            userReaction:
+              content.reactions.find((r) => r.userId === user._id)?.reaction ||
+              0,
+          };
+        });
+
+        setReactions(initialReactions);
+      } catch (error) {
+        console.error("Error fetching content:", error);
+      }
+    };
+
+    fetchData();
+  }, [user]);
 
   const handleOnReaction = async (contentId) => {
     try {
+      if (!user) return;
       // Call the postReaction function to add a reaction
       const response = await postReaction({
         contentId,
         userId: user._id,
       });
 
-      // Log the response for debugging (you can remove this in production)
-      console.log(response);
+      // Update the local state with the updated reaction count and user reaction
+      setReactions((prevReactions) => ({
+        ...prevReactions,
+        [contentId]: {
+          totalReactions: response.totalReactions,
+          userReaction: response.data.reactions.find(
+            (r) => r.userId === user._id
+          )?.reaction,
+        },
+      }));
 
-      // // Assuming the server responds with the updated reaction count
-      // const updatedReactionCount = response.reaction.reactions;
-
-      // // Update the local state or Redux state with the updated count
-      // setReactions((prevReactions) => ({
-      //   ...prevReactions,
-      //   [contentId]: updatedReactionCount,
-      // }));
+      dispatch(fetchContentAction());
     } catch (error) {
       console.error("Error adding reaction:", error);
       // Handle the error as needed
@@ -84,12 +104,12 @@ const Feed = () => {
                   {/* Add your reaction and comment components here */}
                   {/* For example, emoji reactions and a comment input */}
                   <div className="flex items-center mb-2">
-                    <span className="mr-2"> {0}</span>
+                    <span className="mr-2"> {item.totalReactions || 0}</span>
                     <button
                       onClick={() => handleOnReaction(item._id)}
                       className="cursor-pointer"
                     >
-                      ❤️
+                      {reactions[item._id]?.userReaction === 1 ? "❤️" : "🤍"}
                     </button>
                   </div>
 

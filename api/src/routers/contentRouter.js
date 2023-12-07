@@ -43,10 +43,18 @@ router.get("/", async (req, res, next) => {
   try {
     const allContents = await getAllContent();
 
+    const contentWithTotalReactions = allContents.map((content) => ({
+      ...content.toObject(),
+      totalReactions: content.reactions.reduce(
+        (sum, item) => sum + item.reaction,
+        0
+      ),
+    }));
+
     res.json({
       status: "success",
       message: "All contents are shown below:", // Fixed typo in the message
-      allContents,
+      contentWithTotalReactions,
     });
   } catch (error) {
     next(error);
@@ -73,7 +81,6 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
-// router.patch("/:_id", async (req, res, next) => {
 //   try {
 //     const { authorization } = req.headers;
 //     const { _id } = req.params;
@@ -147,7 +154,7 @@ router.patch("/:_id", async (req, res, next) => {
 
       if (userReaction) {
         // User clicked on the same reaction, reset
-        userReaction.reaction = 0;
+        userReaction.reaction = userReaction.reaction === 1 ? 0 : 1;
       } else {
         // User is reacting for the first time, set to 1
         content.reactions.push({ userId: authorization, reaction: 1 });
@@ -160,23 +167,27 @@ router.patch("/:_id", async (req, res, next) => {
 
       if (userReaction) {
         // User has already reacted, update the existing reaction
-        userReaction.reaction = reaction;
+        userReaction.reaction = userReaction.reaction === 1 ? 0 : 1;
       } else {
         // User is reacting for the first time, push a new reaction
-        content.reactions.push({ userId: authorization, reaction });
+        content.reactions.push({ userId: authorization, reaction: 1 });
       }
     }
 
     // Update the total number of reactions
     content.totalReactions = content.reactions.reduce(
-      (sum, reaction) => sum + reaction.reaction,
+      (sum, item) => sum + item.reaction,
       0
     );
 
     // Save the updated content
     const data = await content.save();
 
-    res.status(200).json({ status: "success", data });
+    res.status(200).json({
+      status: "success",
+      data,
+      totalReactions: content.totalReactions,
+    });
   } catch (error) {
     console.error("Error updating content:", error);
     res.status(500).json({ error: error.message });

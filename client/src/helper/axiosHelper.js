@@ -107,6 +107,7 @@ export const postReaction = async ({ contentId, userId }) => {
       }
     );
 
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return {
