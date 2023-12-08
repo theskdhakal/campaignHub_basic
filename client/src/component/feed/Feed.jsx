@@ -132,7 +132,7 @@ const Feed = () => {
           <li key={id} className="bg-white p-5 rounded-md shadow-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:flex-grow">
-                <h2
+                <div
                   className="text-xl font-semibold mb-2"
                   style={{ maxWidth: "44vw", wordWrap: "break-word" }}
                 >
