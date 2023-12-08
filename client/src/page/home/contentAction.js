@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import {
+  deleteContent,
   getAllContent,
   getUserSpecificContent,
   postContent,
@@ -35,5 +36,18 @@ export const getUserContentAction = (userId) => async (dispatch) => {
 
   if (status === "success") {
     dispatch(setUserPosts(contents));
+  }
+};
+
+export const deleteContentAction = (data) => async (dispatch) => {
+  if (!window.confirm("Are you sure you want to delete it ?")) {
+    return;
+  }
+  const { status, message } = await deleteContent(data);
+
+  toast[status](message);
+
+  if (status === "success") {
+    dispatch(fetchContentAction());
   }
 };

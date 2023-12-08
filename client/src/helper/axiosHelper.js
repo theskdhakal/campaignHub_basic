@@ -116,3 +116,75 @@ export const postReaction = async ({ contentId, userId }) => {
     };
   }
 };
+
+export const postComment = async ({
+  contentId,
+  userId,
+  userName,
+  feedback,
+}) => {
+  try {
+    const response = await axios.patch(
+      contentEP + "/comment/" + contentId,
+      {
+        contentId,
+        userName,
+        feedback,
+      },
+      {
+        headers: {
+          authorization: userId,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+//delete content
+
+export const deleteContent = async ({ contentId, userId }) => {
+  console.log(userId);
+  try {
+    const response = await axios.delete(
+      contentEP + "/" + contentId,
+
+      {
+        headers: {
+          authorization: userId,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+//delete comment
+export const deleteComment = async ({ commentId, userId }) => {
+  try {
+    const response = await axios.delete(contentEP + "/comment/" + commentId, {
+      headers: {
+        authorization: userId,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};

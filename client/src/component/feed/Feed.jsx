@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { MdDelete } from "react-icons/md";
+import { FaDeleteLeft } from "react-icons/fa6";
 import {
+  deleteComment,
   getAllContent,
   getReactionsForContent,
+  postComment,
   postReaction,
 } from "../../helper/axiosHelper";
-import { fetchContentAction } from "../../page/home/contentAction";
+import {
+  deleteContentAction,
+  fetchContentAction,
+} from "../../page/home/contentAction";
+import { toast } from "react-toastify";
 
 const Feed = () => {
   const { posts } = useSelector((state) => state.post);
@@ -15,6 +23,13 @@ const Feed = () => {
 
   //keeping track for each post
   const [reactions, setReactions] = useState({});
+  const [form, setForm] = useState({});
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm({ ...form, [name]: value });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +83,44 @@ const Feed = () => {
     }
   };
 
+  const handleOnComment = async (contentId) => {
+    try {
+      if (!form.feedback) {
+        window.alert("comment box is empty");
+        return;
+      }
+
+      const response = await postComment({
+        contentId,
+        userId: user?._id,
+        userName: user?.fName,
+        feedback: form.feedback,
+      });
+
+      dispatch(fetchContentAction());
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleOnDeletePost = (contentId) => {
+    const data = {
+      contentId,
+      userId: user._id,
+    };
+    dispatch(deleteContentAction(data));
+  };
+
+  const handleOnDeleteComment = async (commentId) => {
+    const response = await deleteComment({
+      commentId,
+      userId: user._id,
+    });
+    const { status, message } = response;
+    toast[status](message);
+    dispatch(fetchContentAction());
+  };
+
   return (
     <section className="mt-12 max-w-screen-lg mx-auto overflow-x-hidden">
       <div>
@@ -79,7 +132,15 @@ const Feed = () => {
         {posts.map((item, id) => (
           <li key={id} className="bg-white p-5 rounded-md shadow-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:flex-grow">
+              <div className="md:flex-grow relative">
+                <div
+                  className="absolute top-1 right-1 cursor-pointer"
+                  onClick={() => {
+                    handleOnDeletePost(item._id);
+                  }}
+                >
+                  <MdDelete />
+                </div>
                 <h2
                   className="text-xl font-semibold mb-2"
                   style={{ maxWidth: "44vw", wordWrap: "break-word" }}
@@ -108,6 +169,7 @@ const Feed = () => {
                     <button
                       onClick={() => handleOnReaction(item._id)}
                       className="cursor-pointer"
+                      disabled={!user._id}
                     >
                       {reactions[item._id]?.userReaction === 1 ? "❤️" : "🤍"}
                     </button>
@@ -115,12 +177,46 @@ const Feed = () => {
 
                   <textarea
                     placeholder="Leave a comment..."
+                    name="feedback"
                     className="w-full p-2 border rounded-md"
+                    onChange={handleOnChange}
                   ></textarea>
 
-                  <button className="mt-2 bg-blue-500 text-white rounded-md px-4 py-2">
+                  <button
+                    className="mt-2 bg-blue-500 text-white rounded-md px-4 py-2"
+                    onClick={() => handleOnComment(item._id)}
+                    type="submit"
+                    disabled={!user?._id}
+                  >
                     Post Comment
                   </button>
+                </div>
+
+                <div className="bg-gray-100 rounded-md mt-2 p-4">
+                  <h5>Comments</h5>
+                  <ul>
+                    {item.comments.map((comment, index) => (
+                      <li
+                        key={index}
+                        className="mb-2 flex bg-white rounded items-center justify-between"
+                      >
+                        <div>
+                          <h5 className="inline-block bg-blue-300 rounded-full px-2 border py-2 mb-4 md:mb-0 md:mr-4">
+                            {comment.userName[0]}:
+                          </h5>{" "}
+                          {comment.comments}
+                        </div>
+                        <span
+                          className="text-end cursor-pointer text-red-500"
+                          onClick={() => {
+                            handleOnDeleteComment(comment._id);
+                          }}
+                        >
+                          <FaDeleteLeft />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>

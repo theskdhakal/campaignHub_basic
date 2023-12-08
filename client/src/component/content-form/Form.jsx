@@ -37,11 +37,6 @@ const Form = () => {
       userName: user.fName + " " + user.lName,
     };
 
-    if (!form.post || !form.imageFile) {
-      toast.error("Please fill out all fields");
-      return;
-    }
-
     console.log(postData);
     // Dispatch action to add post with data including image file
     dispatch(addContentAction(postData));
