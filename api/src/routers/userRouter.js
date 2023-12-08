@@ -1,5 +1,9 @@
 import express from "express";
-import { getOneUser, insertUser } from "../models/user/UserModel.js";
+import {
+  getOneUser,
+  insertUser,
+  updateUser,
+} from "../models/user/UserModel.js";
 
 const router = express.Router();
 
@@ -49,6 +53,37 @@ router.post("/login", async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+});
+
+router.patch("/:_id", async (req, res, next) => {
+  try {
+    const { fName, lName } = req.body;
+
+    const { _id } = req.params;
+
+    if (!_id) {
+      return res.status(400).json({ error: "NO user found" });
+    }
+
+    //update user detail with new details]
+
+    const user = await updateUser(
+      { _id },
+      { $set: { fName: fName, lName: lName } }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "user not updated" });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "User Profile Updated",
+      user,
+    });
+  } catch (error) {
+    next();
   }
 });
 

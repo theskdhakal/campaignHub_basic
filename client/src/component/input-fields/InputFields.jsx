@@ -52,3 +52,28 @@ export const LoginInput = [
     required: true,
   },
 ];
+
+export const updateFields = [
+  {
+    label: "First Name",
+    name: "fName",
+    type: "text",
+    placeholder: "Frodo",
+    required: true,
+  },
+  {
+    label: "Last Name",
+    name: "lName",
+    type: "text",
+    placeholder: "Baggins",
+    required: true,
+  },
+  {
+    label: "Email",
+    name: "email",
+    type: "email",
+    placeholder: "frodo@baggins.com",
+    disabled: true,
+    required: true,
+  },
+];

@@ -2,6 +2,7 @@ import express from "express";
 import { upload } from "../middleware/multerMiddleware.js";
 import {
   addContent,
+  deleteContent,
   getAllContent,
   getContent,
   updateContent,
@@ -191,6 +192,131 @@ router.patch("/:_id", async (req, res, next) => {
   } catch (error) {
     console.error("Error updating content:", error);
     res.status(500).json({ error: error.message });
+  }
+});
+
+router.patch("/comment/:_id", async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+    const { _id } = req.params;
+
+    // Assume req.body.reaction is sent from the frontend to indicate the reaction action
+    const { feedback, userName } = req.body;
+
+    if (!authorization || !_id || !feedback) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    console.log(authorization);
+
+    // Update the content with the new comment
+    const updatedContent = await updateContent(
+      { _id },
+      {
+        $push: {
+          comments: {
+            comments: feedback,
+            userName: userName,
+            userId: authorization,
+          },
+        },
+      }
+    );
+
+    if (!updatedContent) {
+      return res.status(404).json({ error: "Content not found" });
+    }
+
+    return res.status(200).json(updatedContent);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//deleting content
+router.delete("/:_id", async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+
+    const { _id } = req.params;
+    console.log(_id);
+
+    const userId = authorization;
+
+    if (userId && _id) {
+      const filter = {
+        _id,
+        userId,
+      };
+
+      const result = await deleteContent(filter);
+
+      if (result?._id) {
+        return res.json({
+          status: "success",
+          message: "The post has been deleted",
+        });
+      }
+    }
+
+    res.json({
+      status: "error",
+      message: "Invalid request",
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/comment/:_id", async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+
+    const { _id } = req.params;
+    console.log(_id);
+
+    if (authorization && _id) {
+      // Find the content with the matching comment
+      const content = await ContentSchema.findOne({
+        "comments._id": _id,
+      });
+
+      if (!content) {
+        return res.status(404).json({ error: "Content not found" });
+      }
+
+      // Find the comment within the content
+      const comment = content.comments.find((c) => c._id.toString() === _id);
+
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+
+      // Check if the user who made the comment is the one trying to delete it
+      if (comment.userId.toString() === authorization) {
+        // User has the right to delete the comment
+        // Remove the comment from the content
+        content.comments.pull({ _id: comment._id });
+
+        // Save the updated content
+        await content.save();
+
+        return res.json({
+          status: "success",
+          message: "Comment deleted successfully",
+        });
+      } else {
+        return res.status(200).json({
+          status: "error",
+          message:
+            "Unauthorized: You do not have permission to delete this comment",
+        });
+      }
+    }
+
+    return res.status(400).json({ error: "Invalid request" });
+  } catch (error) {
+    next(error);
   }
 });
 

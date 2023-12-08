@@ -36,6 +36,20 @@ export const loginUser = async (obj) => {
   }
 };
 
+export const editUser = async (form, userId) => {
+  console.log(form, userId);
+  try {
+    const response = await axios.patch(userEP + "/" + userId, form);
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
 // ================================= content Api ========================
 
 export const postContent = async ({ userId, ...obj }) => {

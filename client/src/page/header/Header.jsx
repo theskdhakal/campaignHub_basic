@@ -103,12 +103,12 @@ export const Header = () => {
                         >
                           Dashboard
                         </Link>
-                        <a
-                          href="#"
+                        <Link
+                          to={`/editProfile/${userId}`}
                           className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                         >
-                          Settings
-                        </a>
+                          Edit profile
+                        </Link>
                         <Link
                           to="/login"
                           className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
