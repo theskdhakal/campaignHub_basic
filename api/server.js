@@ -1,46 +1,36 @@
 import express from "express";
-
-import "dotenv/config";
+import "dotenv/config.js";
 import cors from "cors";
+import morgan from "morgan"; // Move morgan import to the top
+import path from "path";
 
 const app = express();
 const PORT = 8000;
 
-//db connect
+// db connect
 import { connectDB } from "./src/config/dbConfig.js";
-
 connectDB();
 
 // middlewares
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
+app.use(morgan("dev")); // Now morgan is imported before its usage
 
-//APIs
+// APIs
 import userRouter from "./src/routers/userRouter.js";
 import contentRouter from "./src/routers/contentRouter.js";
-import morgan from "morgan";
-
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/content", contentRouter);
 
-//server side rendering
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/client/build")));
 
+// Server-side rendering
 app.use("/", (req, res, next) => {
   try {
-    res.send("<h1> Coming Soon.....</h1>");
+    res.sendFile(path.join(__dirname, "/client/build/index.html"));
   } catch (error) {
-    next;
-  }
-});
-
-// server-side rendering
-
-app.use("/", (req, res, next) => {
-  try {
-    res.send("<h1>Coming soon...</h1>");
-  } catch (error) {
-    next;
+    next(error);
   }
 });
 

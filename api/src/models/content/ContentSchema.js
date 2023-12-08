@@ -25,6 +25,20 @@ const contentSchema = new mongoose.Schema(
         },
       },
     ],
+    comments: [
+      {
+        comments: {
+          type: String,
+        },
+        userName: {
+          type: String,
+        },
+        userId: {
+          type: mongoose.Types.ObjectId,
+          ref: "User",
+        },
+      },
+    ],
   },
   {
     timestamps: true,

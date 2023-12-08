@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-const rootUrl = "http://localhost:8000";
+const rootUrl =
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:8000";
 
 const userEP = rootUrl + "/api/v1/user";
 const contentEP = rootUrl + "/api/v1/content";
@@ -26,6 +27,20 @@ export const postNewUser = async (obj) => {
 export const loginUser = async (obj) => {
   try {
     const response = await axios.post(userEP + "/login", obj);
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+export const editUser = async (form, userId) => {
+  console.log(form, userId);
+  try {
+    const response = await axios.patch(userEP + "/" + userId, form);
 
     return response.data;
   } catch (error) {
@@ -113,6 +128,78 @@ export const postReaction = async ({ contentId, userId }) => {
     return {
       status: "error",
       messgae: error.message,
+    };
+  }
+};
+
+export const postComment = async ({
+  contentId,
+  userId,
+  userName,
+  feedback,
+}) => {
+  try {
+    const response = await axios.patch(
+      contentEP + "/comment/" + contentId,
+      {
+        contentId,
+        userName,
+        feedback,
+      },
+      {
+        headers: {
+          authorization: userId,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+//delete content
+
+export const deleteContent = async ({ contentId, userId }) => {
+  console.log(userId);
+  try {
+    const response = await axios.delete(
+      contentEP + "/" + contentId,
+
+      {
+        headers: {
+          authorization: userId,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+//delete comment
+export const deleteComment = async ({ commentId, userId }) => {
+  try {
+    const response = await axios.delete(contentEP + "/comment/" + commentId, {
+      headers: {
+        authorization: userId,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
     };
   }
 };

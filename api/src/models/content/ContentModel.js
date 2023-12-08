@@ -16,6 +16,11 @@ export const getAllContent = () => {
 };
 
 //find contnet  by filter and  update
-export const updateContent = (filter) => {
+export const updateContent = (filter, update) => {
   return ContentSchema.findOneAndUpdate(filter, update, { new: true });
+};
+
+//delete content
+export const deleteContent = (filter) => {
+  return ContentSchema.findOneAndDelete(filter);
 };
