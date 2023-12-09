@@ -2,7 +2,7 @@ import multer from "multer";
 
 //setup multer
 
-const imageFolderPath = "public/img";
+const imageFolderPath = "api/public/img";
 
 const storage = multer.diskStorage({
   //where to store the file
