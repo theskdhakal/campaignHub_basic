@@ -172,21 +172,26 @@ const Feed = () => {
                     </button>
                   </div>
 
-                  <textarea
-                    placeholder="Leave a comment..."
-                    name="feedback"
-                    className="w-full p-2 border rounded-md"
-                    onChange={handleOnChange}
-                  ></textarea>
+                  {user?._id && (
+                    <>
+                      <textarea
+                        placeholder="Leave a comment..."
+                        name="feedback"
+                        className="w-full p-2 border rounded-md"
+                        onChange={handleOnChange}
+                        disabled={!user?._id}
+                      ></textarea>
 
-                  <button
-                    className="mt-2 bg-blue-500 text-white rounded-md px-4 py-2"
-                    onClick={() => handleOnComment(item._id)}
-                    type="submit"
-                    disabled={!user?._id}
-                  >
-                    Post Comment
-                  </button>
+                      <button
+                        className="mt-2 bg-blue-500 text-white rounded-md px-4 py-2"
+                        onClick={() => handleOnComment(item._id)}
+                        type="submit"
+                        disabled={!user?._id}
+                      >
+                        Post Comment
+                      </button>
+                    </>
+                  )}
                 </div>
 
                 <div className="bg-gray-100 rounded-md mt-2 p-4">
