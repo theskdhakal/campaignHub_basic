@@ -14,9 +14,7 @@ router.post("/", async (req, res, next) => {
     result?._id
       ? res.json({
           status: "success",
-          message:
-            "Your account has been created successfully, please go to login page and login with your email:" +
-            result.email,
+          message: "Your account has been created registered",
           user: result,
         })
       : res.json({
