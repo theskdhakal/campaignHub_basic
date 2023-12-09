@@ -5,7 +5,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 import {
   deleteComment,
   getAllContent,
-  getReactionsForContent,
+  postComment,
   postReaction,
 } from "../../helper/axiosHelper";
 import {
@@ -131,13 +131,16 @@ const Feed = () => {
         {posts.map((item, id) => (
           <li key={id} className="bg-white p-5 rounded-md shadow-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:flex-grow">
-                <div
-                  className="text-xl font-semibold mb-2"
-                  style={{ maxWidth: "44vw", wordWrap: "break-word" }}
+              <div className="md:flex-grow relative">
+                <button
+                  className="absolute top-0 -right-1 cursor-pointer"
+                  onClick={() => {
+                    handleOnDeletePost(item._id);
+                  }}
                 >
                   <MdDelete />
-                </div>
+                </button>
+
                 <h2 className="text-xl font-semibold mb-2 sm:max-w-md md:max-w-none">
                   {item.description}
                 </h2>
