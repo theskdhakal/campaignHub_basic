@@ -13,6 +13,7 @@ const contentSchema = new mongoose.Schema(
     },
     description: { type: String, required: true },
     image: { type: String },
+    isApproved: { type: Boolean, default: false, required: true },
     reactions: [
       {
         userId: {

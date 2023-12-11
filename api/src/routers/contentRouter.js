@@ -233,6 +233,31 @@ router.patch("/comment/:_id", async (req, res, next) => {
   }
 });
 
+router.patch("/approve/:_id", async (req, res, next) => {
+  try {
+    const { _id } = req.params;
+    const { isApproved } = req.body;
+
+    console.log(req.params);
+
+    const updatedContent = await updateContent(
+      { _id },
+      { $set: { isApproved: isApproved } }
+    );
+
+    if (!updatedContent) {
+      return res.status(404).json({ error: "Content not found" });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "The post status has been updated",
+      updatedContent,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 //deleting content
 router.delete("/:_id", async (req, res, next) => {
   try {
