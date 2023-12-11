@@ -76,8 +76,11 @@ export const Register = () => {
                 onChange={handleOnChange}
               >
                 <option value="user">User</option>
-                <option value="admin">Admin</option>
+                <option value="user">admin</option>
               </select>
+              <span className="text-green-600">
+                (Please contact admin for admin access)
+              </span>
             </div>
             {InputFields.map((item, i) => (
               <CustomInput

@@ -12,3 +12,13 @@ h1 {
   font-size: 2rem !important;
   font-weight: 700 !important;
 }
+
+.comment-container {
+  display: flex;
+  align-items: center;
+}
+
+.comment-username {
+  width: 120px; /* Set a specific width based on your design */
+  margin-right: 8px; /* Adjust as needed */
+}

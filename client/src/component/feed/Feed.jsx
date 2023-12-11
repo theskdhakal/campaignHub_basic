@@ -204,12 +204,13 @@ const Feed = () => {
                         key={index}
                         className="mb-2 flex bg-white rounded items-center justify-between"
                       >
-                        <div>
-                          <h5 className="inline-block bg-blue-300 rounded-full px-2 border py-2 mb-4 md:mb-0 md:mr-4">
-                            {comment.userName[0]}
+                        <div class="comment-container mb-4 md:mb-0 md:mr-4">
+                          <h5 class="comment-username bg-green-100 rounded-2xl px-2 border py-2">
+                            {comment.userName}
                           </h5>{" "}
-                          {comment.comments}
+                          <p class="comment-text">{comment.comments}</p>
                         </div>
+
                         <span
                           className="text-end cursor-pointer text-red-500"
                           onClick={() => {

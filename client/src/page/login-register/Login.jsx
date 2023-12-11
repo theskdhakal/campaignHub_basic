@@ -49,8 +49,16 @@ export const Login = () => {
             >
               Login
             </button>
-            <p className="flex justify-between inline-block mt-4 text-xs text-gray-500 cursor-pointer hover:text-black">
+            <p className="flex justify-end inline-block mt-4 text-xs text-gray-500 cursor-pointer hover:text-black">
               Forgot Password ?
+            </p>
+            <p
+              className="flex justify-end inline-block mt-4 text-xs text-gray-500 cursor-pointer hover:text-black"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              Register Now !
             </p>
           </form>
         </div>
