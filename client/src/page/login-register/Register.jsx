@@ -18,13 +18,15 @@ export const Register = () => {
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
+
+    console.log(form);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
     const { confirmPassword, ...rest } = form;
 
-    console.log(form);
+    console.log(rest);
 
     if (rest.password === confirmPassword) {
       const result = await postNewUser(rest);
@@ -63,6 +65,20 @@ export const Register = () => {
                 {resp.message}
               </div>
             )}
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="userRole">Select User Role:</label>
+              <select
+                id="role"
+                name="role"
+                disabled
+                style={{ display: "block" }}
+                className="border border-black"
+                onChange={handleOnChange}
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
             {InputFields.map((item, i) => (
               <CustomInput
                 key={i}

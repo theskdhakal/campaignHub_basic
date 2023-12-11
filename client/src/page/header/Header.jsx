@@ -33,7 +33,6 @@ export const Header = () => {
     setSearchValue(newValue);
   };
 
-  console.log(searchValue);
   if (searchValue) {
     filteredPost = posts.filter((item) =>
       item.description.toLowerCase().includes(searchValue.toLowerCase())
@@ -95,6 +94,14 @@ export const Header = () => {
                       >
                         Edit profile
                       </Link>
+                      {user?.role === "admin" && (
+                        <Link
+                          to="/admin"
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                        >
+                          Post-approval
+                        </Link>
+                      )}
                       <Link
                         to="/login"
                         className="block px-4 py-2 text-gray-800 hover:bg-gray-200"

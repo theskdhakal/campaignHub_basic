@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import Dashboard from "./page/user/Dashboard";
 import { useSelector } from "react-redux";
 import { EditProfile } from "./page/user/EditProfile";
+import AdminBoard from "./page/admin-board/AdminBoard";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Dashboard/:userId" element={<Dashboard />} />
         <Route path="/editProfile/:userId" element={<EditProfile />} />
+
+        <Route path="admin" element={<AdminBoard />} />
       </Routes>
       <ToastContainer />
     </>

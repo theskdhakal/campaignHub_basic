@@ -53,6 +53,7 @@ export const editUser = async (form, userId) => {
 
 // ================================= content Api ========================
 
+// for unapproved post
 export const postContent = async ({ userId, ...obj }) => {
   console.log(obj);
   try {
@@ -152,6 +153,22 @@ export const postComment = async ({
         },
       }
     );
+
+    return response.data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+export const approvePost = async ({ contentId, isApproved }) => {
+  console.log(contentId, isApproved);
+  try {
+    const response = await axios.patch(contentEP + "/approve/" + contentId, {
+      isApproved,
+    });
 
     return response.data;
   } catch (error) {

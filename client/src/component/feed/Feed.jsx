@@ -18,6 +18,8 @@ const Feed = () => {
   const { posts } = useSelector((state) => state.post);
   const { user } = useSelector((state) => state.user);
 
+  const approvedPost = posts.filter((post) => post.isApproved === true);
+
   const dispatch = useDispatch();
 
   //keeping track for each post
@@ -128,7 +130,7 @@ const Feed = () => {
         </h1>
       </div>
       <ul className="mt-12 space-y-6 mb-2">
-        {posts.map((item, id) => (
+        {approvedPost.map((item, id) => (
           <li key={id} className="bg-white p-5 rounded-md shadow-lg">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:flex-grow relative">
@@ -204,7 +206,7 @@ const Feed = () => {
                       >
                         <div>
                           <h5 className="inline-block bg-blue-300 rounded-full px-2 border py-2 mb-4 md:mb-0 md:mr-4">
-                            {comment.userName[0]}:
+                            {comment.userName[0]}
                           </h5>{" "}
                           {comment.comments}
                         </div>
