@@ -205,7 +205,7 @@ const Feed = () => {
                         className="mb-2 flex bg-white rounded items-center justify-between"
                       >
                         <div class="comment-container mb-4 md:mb-0 md:mr-4">
-                          <h5 class="comment-username bg-green-100 rounded-2xl px-2 border py-2">
+                          <h5 class="comment-username bg-blue-300 rounded-2xl px-2 border py-2">
                             {comment.userName}
                           </h5>{" "}
                           <p class="comment-text">{comment.comments}</p>
