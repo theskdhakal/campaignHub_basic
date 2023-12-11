@@ -76,7 +76,7 @@ export const Header = () => {
                 </div>
 
                 {isOpen && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg">
+                  <div className="absolute -right-3 mt-2 w-48 bg-white border rounded shadow-lg">
                     <div className="text-center">
                       <span className="text-center">{user.fName}</span>
                     </div>
