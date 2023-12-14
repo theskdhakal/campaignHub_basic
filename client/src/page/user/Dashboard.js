@@ -21,7 +21,7 @@ const Dashboard = () => {
       <h1 className="text-center mb-4 dashboard-title">Dashboard</h1>
 
       <hr />
-      {userPosts ? (
+      {userPosts?._id ? (
         userPosts.map((item, i) => (
           <article
             key={i}
