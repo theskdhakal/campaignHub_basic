@@ -19,6 +19,7 @@ const router = express.Router();
 router.post("/", upload.single("image"), async (req, res, next) => {
   console.log(req.body);
   try {
+    console.log(req.file);
     if (req.file) {
       const { Location } = await uploadFile(req.file);
       req.body.image = Location;
